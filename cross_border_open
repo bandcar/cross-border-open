@@ -2,11 +2,10 @@
 rm(list=ls())
 library(tidyverse)
 
-border_arrests = readRDS("/Users/melissaalejandro/iCloud Drive (Archive) - 3/Documents/Documents - Melissa’s MacBook Pro/Econometrics 6103/Project/Cross-Border/border_arrests.RDS")
-non_border_arrestss = readRDS("/Users/melissaalejandro/iCloud Drive (Archive) - 3/Documents/Documents - Melissa’s MacBook Pro/Econometrics 6103/Project/Cross-Border/non_border_arrests.RDS")
-all_arrests = readRDS("/Users/melissaalejandro/iCloud Drive (Archive) - 3/Documents/Documents - Melissa’s MacBook Pro/Econometrics 6103/Project/Cross-Border/all_arrests.RDS")
-distance100 = readRDS("/Users/melissaalejandro/iCloud Drive (Archive) - 3/Documents/Documents - Melissa’s MacBook Pro/Econometrics 6103/Project/Cross-Border/distance100.RDS")
-
+load(url("hhttps://github.com/bandcar/cross-border-open/blob/main/all_arrests.RData?raw=true"))
+load(url("https://github.com/bandcar/cross-border-open/blob/main/border_arrests.RData?raw=true"))
+load(url("https://github.com/bandcar/cross-border-open/blob/main/distance100.RData?raw=true"))
+load(url("https://github.com/bandcar/cross-border-open/blob/main/non_border_arrests.RData?raw=true"))
 
 #run regression for CO border counties -----------------------------------------
 reg_data_CO <- lm(border_arrests$poss_cannabis_tot_arrests ~ border_arrests$treated*border_arrests$post)
