@@ -1,0 +1,103 @@
+# Regression ran in separate file to maintain neatness
+rm(list=ls())
+library(tidyverse)
+
+border_arrests = readRDS("/Users/melissaalejandro/iCloud Drive (Archive) - 3/Documents/Documents - Melissa’s MacBook Pro/Econometrics 6103/Project/Cross-Border/border_arrests.RDS")
+non_border_arrestss = readRDS("/Users/melissaalejandro/iCloud Drive (Archive) - 3/Documents/Documents - Melissa’s MacBook Pro/Econometrics 6103/Project/Cross-Border/non_border_arrests.RDS")
+all_arrests = readRDS("/Users/melissaalejandro/iCloud Drive (Archive) - 3/Documents/Documents - Melissa’s MacBook Pro/Econometrics 6103/Project/Cross-Border/all_arrests.RDS")
+distance100 = readRDS("/Users/melissaalejandro/iCloud Drive (Archive) - 3/Documents/Documents - Melissa’s MacBook Pro/Econometrics 6103/Project/Cross-Border/distance100.RDS")
+
+
+#run regression for CO border counties -----------------------------------------
+reg_data_CO <- lm(border_arrests$poss_cannabis_tot_arrests ~ border_arrests$treated*border_arrests$post)
+summary(reg_data_CO)
+
+# Let's check the trends for CO!
+did_trends_CO <- aggregate(border_arrests$poss_cannabis_tot_arrests, by=list(border_arrests$year, border_arrests$treated), FUN = mean)
+
+with_RML <- subset(did_trends_CO, did_trends_CO$Group.2==1)
+without_RML <- subset(did_trends_CO, did_trends_CO$Group.2==0)
+
+plot(with_RML$Group.1, with_RML$x, type = "l",
+     main = "DID Trends for Colorado",
+     ylim = c(0, 8), ylab = "# of Arrests per 10,000", xlab = "RML Year")
+abline(v=2012, col="red")
+lines(without_RML$Group.1, without_RML$x, type = "l", col="turquoise4")
+legend("bottomleft", 
+       inset = c(.04,.06),
+       legend = c("No RML CO", "RML CO"),
+       bty="y",
+       fill = c("black", "turquoise4"),
+       cex = .8)
+
+#run regression for WA border counties -----------------------------------------
+reg_data_WA <- lm(border_arrests$poss_cannabis_tot_arrests ~ border_arrests$treated*border_arrests$post)
+summary(reg_data_WA)
+
+# Let's check the trends for WA!
+did_trends_WA <- aggregate(border_arrests$poss_cannabis_tot_arrests, by=list(border_arrests$year, border_arrests$treated), FUN = mean)
+
+with_RML_WA <- subset(did_trends_WA, did_trends_WA$Group.2==1)
+without_RML_WA <- subset(did_trends_WA, did_trends_WA$Group.2==0)
+
+plot(with_RML$Group.1, with_RML$x, type = "l",
+     main = "DID Trends for Washington",
+     ylim = c(0, 8), ylab = "# of Arrests per 10,000", xlab = "RML Year")
+abline(v=2012, col="red")
+lines(without_RML$Group.1, without_RML$x, type = "l", col="turquoise4")
+legend("bottomleft",
+       inset = c(.04,.06),
+       legend = c("No RML WA", "RML WA"),
+       bty="y",
+       fill = c("black", "turquoise4"),
+       cex = .8)
+
+# Run regression for non-border counties ---------------------------------------
+reg_data <- lm(all_arrests$poss_cannabis_tot_arrests ~ all_arrests$treated*all_arrests$post)
+summary(reg_data)
+
+# Let's check the trends nation wide!
+did_trends <- aggregate(all_arrests$poss_cannabis_tot_arrests, by=list(all_arrests$year, all_arrests$treated), FUN = mean)
+
+with_RML1 <- subset(did_trends, did_trends$Group.2==1)
+without_RML1 <- subset(did_trends, did_trends$Group.2==0)
+
+plot(with_RML1$Group.1, with_RML1$x, type = "l",
+     main = "Replication of Figure 1a",
+     ylim = c(0,8),
+      ylab = "# of Arrests per 10,000", xlab = "RML Year")
+abline(v=2012, col="red")
+lines(without_RML1$Group.1, without_RML1$x, type = "l", col="turquoise4")
+legend("bottomleft", 
+       inset = c(.04,.06),
+       legend = c("No RML", "RML"),
+       bty="y",
+       fill = c("black", "turquoise4"),
+       cex = .8)
+
+# Expansion --------------------------------------------------------------------
+
+# Let's check the trends counties within 50 miles!
+border50 <- border_arrests[(border_arrests$fips_state_county_code %in% distance50$county2),]
+
+reg_data2 <- lm(border50$poss_cannabis_tot_arrests ~ border50$treated*border50$post)
+summary(reg_data2)
+
+did_trends2 <- aggregate(border50$poss_cannabis_tot_arrests, by=list(border50$year, border50$treated), FUN = mean)
+
+with_RML2 <- subset(did_trends2, did_trends2$Group.2==1)
+without_RML2 <- subset(did_trends2, did_trends2$Group.2==0)
+
+plot(with_RML2$Group.1, with_RML2$x, type = "l",
+     main = "Counties Under 50 Miles From Border",
+     ylim = c(0,12),
+     ylab = "# of Arrests per 10,000", xlab = "RML Year")
+abline(v=2012, col="red")
+lines(without_RML2$Group.1, without_RML2$x, type = "l", col="turquoise4")
+legend("bottomleft", 
+       inset = c(.04,.06),
+       legend = c("No RML", "RML"),
+       bty="y",
+       fill = c("black", "turquoise4"),
+       cex = .8)
+
