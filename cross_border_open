@@ -1,7 +1,7 @@
 rm(list=ls())
 library(tidyverse)
 
-load(url("hhttps://github.com/bandcar/cross-border-open/blob/main/all_arrests.RData?raw=true"))
+load(url("https://github.com/bandcar/cross-border-open/blob/main/all_arrests.RData?raw=true"))
 load(url("https://github.com/bandcar/cross-border-open/blob/main/border_arrests.RData?raw=true"))
 load(url("https://github.com/bandcar/cross-border-open/blob/main/distance100.RData?raw=true"))
 load(url("https://github.com/bandcar/cross-border-open/blob/main/non_border_arrests.RData?raw=true"))
