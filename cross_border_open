@@ -80,3 +80,21 @@ legend("bottomleft",
        bty="y",
        fill = c("blue", "black"),
        cex = .8)
+       
+arrests_48_states$year <- relevel(as_factor(arrests_48_states$year), ref = "2011")
+
+# Event study2 ----
+event_study3 <- lm(poss_cannabis_tot_arrests ~ as_factor(year)*treated, data = arrests_48_states)
+summary(event_study3)
+
+# Plotting the coefficients
+y2 <- event_study3$coefficients[8:12]
+y2
+y2 <- append(y, 0, 2)
+y2
+
+plot(c(2009:2014), y, col = "blue", xlab = "Year", ylab = "Coefficient",
+     main = "Event Study - ")
+lines(c(2009:2014), y, col = "blue")
+lines(c(2009:2014), numeric(6), col = "gray", lty = "longdash")
+abline(v=2011.5, col = "red")
